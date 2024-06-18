@@ -10,16 +10,17 @@ datasource db {
 model Link {
     id          Int     @id @default(autoincrement())
     link        String  @db.Text
-    conversion  String  @unique
-    token       String  @unique
-    clickcount  Int     @unique
+    conversion  String? @unique
+    token       String? @unique
+    clickcount  Int    @default(0)
 }
 
-model Linkstats {
-    token       Int     @unique
-    browser     String     @unique
-    cpu         String     @unique
-    is_mobile   Boolean     @unique
-    vendor      String     @unique
-    model       String     @unique
-}
+// model Linkstats {
+//     id          Int     @id @default(autoincrement())
+//     token       String     @default("")
+//     browser     String     @default("")
+//     cpu         String     @default("")
+//     is_mobile   Boolean     @default(false)
+//     vendor      String     @default("")
+//     model       String     @default("")
+// }
