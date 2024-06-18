@@ -1,0 +1,25 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Link {
+    id          Int     @id @default(autoincrement())
+    link        String  @db.Text
+    conversion  String  @unique
+    token       String  @unique
+    clickcount  Int     @unique
+}
+
+model Linkstats {
+    token       Int     @unique
+    browser     String     @unique
+    cpu         String     @unique
+    is_mobile   Boolean     @unique
+    vendor      String     @unique
+    model       String     @unique
+}
