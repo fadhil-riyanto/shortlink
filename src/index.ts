@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client'
 import { Exception } from './exceptions/Index'
 
 import { shortRequestValidate, Short } from './handler/short'
+import { DataCollector } from './handler/collector'
 
 const app = express();
 const port = 8000;
@@ -16,6 +17,30 @@ app.set("views", path.join(__dirname, '../template/page'))
 
 app.get("/", function(req: Request, res: Response) {
     res.render('index');
+})
+
+app.get("/:conversion", function(req: Request, res: Response) {
+    
+
+    // try {
+    let collector: DataCollector = new DataCollector(prisma);
+    collector.setConversion(req.params.conversion)
+        .then((next) => next.incrementClick())
+        .then((next) => next.getRedirectionData())
+        .then((str2redirect) => res.redirect(str2redirect))
+        .catch((e) => {
+            if (e instanceof Exception.RouteNotFound) {
+                res.send("link invalid handled")
+            }
+        })
+    // } catch (e) {
+    //     if (e instanceof Exception.RouteNotFound) {
+    //         res.send("link invalid handled")
+    //     }
+    // }
+    
+
+    
 })
 
 app.get("/api/short", function(req: Request, res: Response) {
