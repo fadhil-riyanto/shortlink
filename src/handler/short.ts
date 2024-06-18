@@ -24,12 +24,11 @@ export class Short {
         }
     }
 
-    private async isDataAlreadyAdded(data: RandomGenerationData, link: string): Promise<boolean> {
+    private async isDataAlreadyAdded(data: RandomGenerationData): Promise<boolean> {
         return await this.prisma.link.findUnique({
             where: {
                 conversion: data.conversion,
-                token: data.token,
-                link: link
+                token: data.token
             }
         }) != null ? true : false;
     }
@@ -39,19 +38,18 @@ export class Short {
         return this;
     }
 
-    public async generateLinks() {
-        console.log("logged")
+    public async generateLinks() : Promise<RandomGenerationData> {
         let prototypeDataTemp: RandomGenerationData = this.generateRandomTokenAndConvertion();
-        if (await this.isDataAlreadyAdded(prototypeDataTemp, this.link) == false) {
-            let a = await this.prisma.link.create({
+        if (await this.isDataAlreadyAdded(prototypeDataTemp) == false) {
+            await this.prisma.link.create({
                 data: {
                     link: this.link,
                     conversion: prototypeDataTemp.conversion,
-                    token: prototypeDataTemp.token,
-                    clickcount: 0 // initial
+                    token: prototypeDataTemp.token
                 }
             })
-            console.log(a)
+            return prototypeDataTemp;
+            // console.log(a)
         } else {
             throw new Exception.DuplicationWarn("Link already", "link already added")
         }
