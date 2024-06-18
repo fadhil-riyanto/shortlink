@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include("../components/uikit.ejs"); -%>
+    <%- include("../components/jquery.ejs"); -%>
+</head>
+
+<body uk-height-viewport class="">
+    <%- include("../components/navbar.ejs"); -%>
+    <div class="uk-container">
+        <form action="">
+            <div class="uk-flex uk-margin-medium-top">
+                <input class="uk-input" type="text" placeholder="insert link ..." id="target-link">
+                <button class="uk-button uk-button-primary">short</button>
+            </div>
+        </form>
+        <div uk-alert hidden>
+            <div class="uk-text-success">
+                succes: link.fadev.org/2987hbi
+            </div>
+            <div class="uk-flex">
+                <div>
+                    token: 238189021098
+                </div>
+                &nbsp;
+                <div class="uk-text-warning">
+                    (warning: token can only be viewed once, use it for delete the links and acces statistics page)
+                </div>
+                
+            </div>
+        </div>
+        <div class="uk-text-small">
+            
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("form").submit(function(e) {
+                e.preventDefault();
+                console.log($("#target-link").val())
+            })
+        })
+    </script>
+</body>
