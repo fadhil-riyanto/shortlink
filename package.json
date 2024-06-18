@@ -5,7 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "tsc && node ./build/index.js",
+    "start_boated": "ts-node /build/index.js"
   },
   "keywords": [
     "shortlink"
@@ -13,9 +15,17 @@
   "author": "Fadhil Riyanto (https://github.com/fadhil-riyanto)",
   "license": "GPL-2.0",
   "dependencies": {
+    "@prisma/client": "^5.15.0",
     "@types/express": "^4.17.21",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "typescript": "^5.4.5",
+    "uikit": "^3.21.5",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.8",
+    "prisma": "^5.15.0"
   }
 }
