@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "tsc && node ./build/index.js",
-    "start_boated": "ts-node /build/index.js"
+    "start_bloated": "ts-node ./src/index.ts"
   },
   "keywords": [
     "shortlink"
