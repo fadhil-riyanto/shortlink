@@ -1,11 +1,14 @@
 import express from "express";
 import { Request, Response } from "express"
 import path from "path"
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { Exception } from './exceptions/Index'
 
 import { shortRequestValidate, Short } from './handler/short'
 import { DataCollector } from './handler/collector'
+import { deleteUrl } from "./handler/delete";
+import { calculateStats } from './handler/statsCalc'
+import { Helper } from './helper'
 
 const app = express();
 const port = 8000;
@@ -19,29 +22,41 @@ app.get("/", function(req: Request, res: Response) {
     res.render('index');
 })
 
-app.get("/:conversion", function(req: Request, res: Response) {
-    
+app.get("/api/stats", function(req: Request, res: Response) {
+    let stats: calculateStats = new calculateStats(prisma);
+    stats.setTokenData(req.query.token!.toString()).getBrowserStats()
+})
 
-    // try {
+app.get("/:conversion", function(req: Request, res: Response) {
+
     let collector: DataCollector = new DataCollector(prisma);
     collector.setConversion(req.params.conversion)
         .then((next) => next.incrementClick())
+        .then((next) => next.collectData(req))
         .then((next) => next.getRedirectionData())
         .then((str2redirect) => res.redirect(str2redirect))
         .catch((e) => {
             if (e instanceof Exception.RouteNotFound) {
-                res.send("link invalid handled")
+                res.render("_404")
             }
         })
-    // } catch (e) {
-    //     if (e instanceof Exception.RouteNotFound) {
-    //         res.send("link invalid handled")
-    //     }
-    // }
-    
-
-    
 })
+
+app.get("/api/delete", function(req: Request, res: Response) {
+    let deleter: deleteUrl = new deleteUrl(prisma);
+    deleter.delete(req.query.token!.toString())
+        .then(() => res.send("deleted"))
+        .catch((e) => {
+            if (e instanceof Prisma.PrismaClientValidationError) {
+                Helper.send_500(res, "Request invalid")
+            } else if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                Helper.send_500(res, "Token not found")
+            }
+        })
+
+})
+
+
 
 app.get("/api/short", function(req: Request, res: Response) {
     let validation: shortRequestValidate = new shortRequestValidate(req);
@@ -49,20 +64,19 @@ app.get("/api/short", function(req: Request, res: Response) {
     if (validation.isValid()) {
         let shorthandler: Short = new Short(prisma);
 
-        try {
             shorthandler.setLink(validation.getValidatedLinks())
                 .generateLinks()
                 .then((data) => {
                     res.json(data)
                 })
-        } catch (e) {
-            if (e instanceof Exception.DuplicationWarn) {
-                res.send("duplicate")
-            }
-        }
+                .catch ((e) => {
+                    if (e instanceof Exception.DuplicationWarn) {
+                        Helper.send_500(res, "Duplication error")
+                    }
+                })
         
     } else {
-        res.send("invalid")
+        Helper.send_500(res, "Link invalid")
     }
 })
 
