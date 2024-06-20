@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { ILink } from '../interface/ILink'
 import { Exception } from '../exceptions/Index';
+import { UAParser } from 'ua-parser-js';
+import { Request } from "express"
 
 export class DataCollector {
     private conversion!: string;
@@ -44,5 +46,25 @@ export class DataCollector {
 
     public async getRedirectionData() : Promise<string> {
         return this.currentData.link
+    }
+
+    public async collectData(req: Request) {
+        const parser = new UAParser(req.get('user-agent'));
+        let result: UAParser.IResult = parser.getResult();
+        await this.prisma.linkstats.create({
+            data: {
+                conversion: this.currentData.conversion,
+                token: this.currentData.token,
+                browser: result.browser.name,
+                os: result.os.name,
+                cpu: result.cpu.architecture,
+                is_mobile: result.device.type,
+                vendor: result.device.vendor,
+                model: result.device.model,
+                
+            }
+        })
+        
+        return this
     }
 }
