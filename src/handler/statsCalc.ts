@@ -21,11 +21,9 @@ export class calculateStats {
             }
         })
 
-        const browserTotalUsageCouts = await this.prisma.linkstats.findMany({
-            include: {
-              _count: {
-                select: { browser: "Firefox" },
-              },
+        const browserTotalUsageCouts = await this.prisma.linkstats.count({
+            where: {
+                browser: "windows"
             }
           })
         // console.log("running")
