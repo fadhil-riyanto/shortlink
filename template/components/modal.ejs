@@ -1,0 +1,21 @@
+<!-- This is the modal with the outside close button -->
+<div id="errormodal" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-outside" type="button" uk-close></button>
+        <h2 class="uk-modal-title">Error</h2>
+        <p class="errormodal-value"></p>
+    </div>
+</div>
+
+
+<div id="statistics-modal" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <p class="uk-modal-title">statistics</p>
+       
+        <form action="/api/stats" method="get">
+                <input class="uk-input uk-margin-small-bottom" type="text" placeholder="insert token to view statistics ..." name="token">
+                <button class="uk-button uk-button-primary" type="submit">go!</button>
+        </form>
+        
+    </div>
+</div>

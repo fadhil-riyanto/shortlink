@@ -7,15 +7,21 @@
 
 <body uk-height-viewport class="">
     <%- include("../components/navbar.ejs"); -%>
+    <%- include("../components/deletelinks.ejs"); -%>
+    <%- include("../components/modal.ejs"); -%>
+    
     <div class="uk-container">
-        <form action="">
+        <form action="" id="addform">
             <div class="uk-flex uk-margin-medium-top">
                 <input class="uk-input" type="text" placeholder="insert link ..." id="target-link">
                 <button class="uk-button uk-button-primary">short</button>
             </div>
         </form>
-        <div uk-alert>
-            <div class="uk-text-success" id="conversion_id">
+        <div uk-alert id="alert-data">
+            <div class="uk-flex">
+                success: your link&nbsp;
+                <a class="uk-text-success" id="conversion_id" href="">
+                </a>
             </div>
             <div class="uk-flex">
                 <div id="token_id">
@@ -35,7 +41,8 @@
 
     <script>
         $(document).ready(function() {
-            $("form").submit(function(e) {
+            $("#alert-data").hide()
+            $("#addform").submit(function(e) {
                 e.preventDefault();
                 $.ajax({
                     url: "/api/short",
@@ -43,12 +50,39 @@
                         url: $("#target-link").val()
                     },
                     success: function(data) {
-                        console.log(data)
                         $("#token_id").html("token: " + data["token"])
-                        $("#conversion_id").html("success: your link <%= process.env.SERVER %>" + data["conversion"])
+                        $("#conversion_id")
+                            .html("<%= process.env.SERVER %>" + data["conversion"])
+                            .attr("href", "<%= process.env.SERVER %>" + data["conversion"])
+                        $("#alert-data").show()
+                    },
+                    error: function(data) {
+                        UIkit.modal.alert(data.responseJSON.message)
                     }
                 })
             })
+
+            $("#deleteform").submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "/api/delete",
+                    data: {
+                        token: $("#target-token-del").val()
+                    },
+                    success: function(data) {
+                        $("#token_id").html("token: " + data["token"])
+                        $("#conversion_id")
+                            .html("<%= process.env.SERVER %>" + data["conversion"])
+                            .attr("href", "<%= process.env.SERVER %>" + data["conversion"])
+                        $("#alert-data").show()
+                    },
+                    error: function(e) {
+                        UIkit.modal.alert(e.responseJSON.message)
+                    }
+                })
+            })
+
+            // $("#statistics-modal").
         })
     </script>
 </body>
