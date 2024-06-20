@@ -15,12 +15,16 @@ model Link {
     clickcount  Int    @default(0)
 }
 
-// model Linkstats {
-//     id          Int     @id @default(autoincrement())
-//     token       String     @default("")
-//     browser     String     @default("")
-//     cpu         String     @default("")
-//     is_mobile   Boolean     @default(false)
-//     vendor      String     @default("")
-//     model       String     @default("")
-// }
+model Linkstats {
+    id          Int     @id @default(autoincrement())
+    conversion  String?
+    token       String?
+
+    // tracked data
+    browser     String?
+    cpu         String?
+    os         String?
+    is_mobile   String?
+    vendor      String?
+    model       String?
+}
