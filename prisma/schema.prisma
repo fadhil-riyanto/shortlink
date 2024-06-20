@@ -22,9 +22,5 @@ model Linkstats {
 
     // tracked data
     browser     String?
-    cpu         String?
-    os         String?
     is_mobile   String?
-    vendor      String?
-    model       String?
 }
