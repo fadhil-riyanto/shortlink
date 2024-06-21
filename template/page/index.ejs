@@ -70,11 +70,7 @@
                         token: $("#target-token-del").val()
                     },
                     success: function(data) {
-                        $("#token_id").html("token: " + data["token"])
-                        $("#conversion_id")
-                            .html("<%= process.env.SERVER %>" + data["conversion"])
-                            .attr("href", "<%= process.env.SERVER %>" + data["conversion"])
-                        $("#alert-data").show()
+                        UIkit.modal.alert("deleted")
                     },
                     error: function(e) {
                         UIkit.modal.alert(e.responseJSON.message)
