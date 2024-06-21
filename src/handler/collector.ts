@@ -56,11 +56,7 @@ export class DataCollector {
                 conversion: this.currentData.conversion,
                 token: this.currentData.token,
                 browser: result.browser.name,
-                os: result.os.name,
-                cpu: result.cpu.architecture,
-                is_mobile: result.device.type,
-                vendor: result.device.vendor,
-                model: result.device.model,
+                is_mobile: result.device.type
                 
             }
         })
