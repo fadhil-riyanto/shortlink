@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include("../components/uikit.ejs"); -%>
+    <%- include("../components/jquery.ejs"); -%>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+
+<body uk-height-viewport class="">
+    <%- include("../components/navbar.ejs"); -%>
+    <%- include("../components/deletelinks.ejs"); -%>
+    <%- include("../components/modal.ejs"); -%>
+    
+    <div class="uk-container">
+        <div uk-grid class="uk-child-width-expand@s">
+            <div>
+                <div>
+                    <h3>user browser</h3>
+                </div>
+                <div>
+                    <canvas id="browserstats" width="100" height="100">Your browser does not support the canvas element.</canvas>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <h3>is mobile?</h3>
+                </div>
+                <div>
+                    <canvas id="mobilestats" width="100" height="100">Your browser does not support the canvas element.</canvas>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <h3>total click</h3>
+                </div>
+                <div>
+                    <p><%= click %></p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+
+        const browserdata = {
+            labels: JSON.parse('<%- JSON.stringify(browser) %>').map((data) => data.browser),
+            datasets: [{
+                label: 'My First Dataset',
+                data: JSON.parse('<%- JSON.stringify(browser) %>').map((data) => data.total_user),
+                backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+
+        const is_mobile_data = {
+            labels: JSON.parse('<%- JSON.stringify(is_mobile) %>').map((data) => data.is_mobile),
+            datasets: [{
+                label: 'My First Dataset',
+                data: JSON.parse('<%- JSON.stringify(is_mobile) %>').map((data) => data.total_user),
+                backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+
+        new Chart("browserstats", {
+            type: "doughnut",
+            data: browserdata,
+            options: {
+                responsive: true
+            }
+        }); 
+
+        new Chart("mobilestats", {
+            type: "doughnut",
+            data: is_mobile_data,
+            options: {
+                responsive: true
+            }
+        }); 
+    </script>
+</body>

@@ -24,7 +24,16 @@ app.get("/", function(req: Request, res: Response) {
 
 app.get("/api/stats", function(req: Request, res: Response) {
     let stats: calculateStats = new calculateStats(prisma);
-    stats.setTokenData(req.query.token!.toString()).getBrowserStats()
+    let ctx = stats.setTokenData(req.query.token!.toString())
+    let return_data = Promise.all([ctx.getBrowserStats(), ctx.getMobilePrecentage(), ctx.getClickCount()]).then(ret => {
+        res.render("stats", {
+            browser: ret[0],
+            is_mobile: ret[1],
+            click: ret[2]?.clickcount
+        })
+    })
+
+    
 })
 
 app.get("/:conversion", function(req: Request, res: Response) {
